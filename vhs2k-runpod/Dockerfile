@@ -31,7 +31,8 @@ RUN mkdir -p /opt/realesrgan \
     fi
 
 ENV PATH="/opt/realesrgan:${PATH}"
-RUN command -v realesrgan-ncnn-vulkan && realesrgan-ncnn-vulkan -h >/dev/null 2>&1
+RUN test -x /usr/local/bin/realesrgan-ncnn-vulkan \
+    && /usr/local/bin/realesrgan-ncnn-vulkan -h >/dev/null 2>&1
 
 # App
 COPY handler.py pipeline.py config.py main.py /workspace/
