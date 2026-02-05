@@ -25,10 +25,13 @@ RUN mkdir -p /opt/realesrgan \
         && if [ -z "$BIN_PATH" ]; then echo "realesrgan-ncnn-vulkan not found"; exit 1; fi \
         && chmod +x "$BIN_PATH" \
         && ln -sf "$BIN_PATH" /usr/local/bin/realesrgan-ncnn-vulkan; \
+    else \
+        echo "REALESGAN_URL is empty; cannot install realesrgan-ncnn-vulkan" \
+        && exit 1; \
     fi
 
 ENV PATH="/opt/realesrgan:${PATH}"
-RUN command -v realesrgan-ncnn-vulkan && realesrgan-ncnn-vulkan -h >/dev/null 2>&1 || true
+RUN command -v realesrgan-ncnn-vulkan && realesrgan-ncnn-vulkan -h >/dev/null 2>&1
 
 # App
 COPY handler.py pipeline.py config.py main.py /workspace/
