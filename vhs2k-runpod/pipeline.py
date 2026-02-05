@@ -232,10 +232,26 @@ def enforce_max_job_seconds(start_time, logs):
         raise PipelineError(ERR_TIMEOUT, "Job timeout", logs)
 
 
+def log_realesrgan_info(logs):
+    path = shutil.which("realesrgan-ncnn-vulkan")
+    log_line(logs, "which realesrgan-ncnn-vulkan: %s" % (path if path else "NOT FOUND"))
+    if not path:
+        return
+    try:
+        out = subprocess.check_output([path, "-h"], stderr=subprocess.STDOUT, timeout=5)
+        text = out.decode("utf-8", errors="ignore").strip()
+        if len(text) > 400:
+            text = text[:400] + "..."
+        log_line(logs, "realesrgan-ncnn-vulkan -h: %s" % text)
+    except Exception as exc:
+        log_line(logs, "realesrgan-ncnn-vulkan -h failed: %s" % exc)
+
+
 def pipeline(request):
     logs = []
     start_time = time.time()
     log_line(logs, "Job started")
+    log_realesrgan_info(logs)
 
     request = apply_profile(request)
     validate_request(request, logs)

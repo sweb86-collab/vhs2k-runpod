@@ -20,10 +20,15 @@ RUN mkdir -p /opt/realesrgan \
     && if [ -n "$REALESGAN_URL" ]; then \
         wget -O /opt/realesrgan/realesrgan.zip "$REALESGAN_URL" \
         && unzip /opt/realesrgan/realesrgan.zip -d /opt/realesrgan \
-        && rm /opt/realesrgan/realesrgan.zip; \
+        && rm /opt/realesrgan/realesrgan.zip \
+        && BIN_PATH="$(find /opt/realesrgan -type f -name realesrgan-ncnn-vulkan | head -n 1)" \
+        && if [ -z "$BIN_PATH" ]; then echo "realesrgan-ncnn-vulkan not found"; exit 1; fi \
+        && chmod +x "$BIN_PATH" \
+        && ln -sf "$BIN_PATH" /usr/local/bin/realesrgan-ncnn-vulkan; \
     fi
 
 ENV PATH="/opt/realesrgan:${PATH}"
+RUN command -v realesrgan-ncnn-vulkan && realesrgan-ncnn-vulkan -h >/dev/null 2>&1 || true
 
 # App
 COPY handler.py pipeline.py config.py main.py /workspace/
