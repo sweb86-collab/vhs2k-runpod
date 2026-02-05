@@ -1,6 +1,11 @@
 name: Build and Push Runpod Image
 
-on:
+"on":
+  push:
+    branches: ["main"]
+    paths:
+      - "vhs2k-runpod/**"
+      - ".github/workflows/build-runpod-image.yml"
   workflow_dispatch:
     inputs:
       tag:
@@ -40,4 +45,3 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:${{ inputs.tag }}
           build-args: |
             REALESRGAN_URL=${{ secrets.REALESRGAN_URL }}
-
