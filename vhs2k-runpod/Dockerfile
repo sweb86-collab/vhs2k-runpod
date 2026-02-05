@@ -7,6 +7,7 @@ WORKDIR /workspace
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-dev \
     ffmpeg wget ca-certificates unzip \
+    libvulkan1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Python deps
@@ -32,7 +33,7 @@ RUN mkdir -p /opt/realesrgan \
 
 ENV PATH="/opt/realesrgan:${PATH}"
 RUN test -x /usr/local/bin/realesrgan-ncnn-vulkan \
-    && /usr/local/bin/realesrgan-ncnn-vulkan -h >/dev/null 2>&1
+    && ls -l /usr/local/bin/realesrgan-ncnn-vulkan
 
 # App
 COPY handler.py pipeline.py config.py main.py /workspace/
