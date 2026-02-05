@@ -1,11 +1,6 @@
 name: Build and Push Runpod Image
 
-"on":
-  push:
-    branches: ["main"]
-    paths:
-      - "vhs2k-runpod/**"
-      - ".github/workflows/build-runpod-image.yml"
+on:
   workflow_dispatch:
     inputs:
       tag:
@@ -19,9 +14,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up QEMU
@@ -36,13 +30,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: ./vhs2k-runpod
           file: ./vhs2k-runpod/Dockerfile
           push: true
-          # For push events, github.event.inputs.tag doesn't exist, so default to "latest"
-          tags: ${{ env.IMAGE_NAME }}:${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || 'latest' }}
+          tags: ${{ env.IMAGE_NAME }}:${{ inputs.tag }}
           build-args: |
             REALESRGAN_URL=${{ secrets.REALESRGAN_URL }}
