@@ -18,7 +18,7 @@ RUN pip3 install --no-cache-dir -r /workspace/requirements.txt
 ARG REALESRGAN_URL=
 RUN mkdir -p /opt/realesrgan \
     && if [ -n "$REALESRGAN_URL" ]; then \
-        wget -O /opt/realesrgan/realesrgan.zip "$REALESRGAN_URL" \
+        wget -L -O /opt/realesrgan/realesrgan.zip "$REALESRGAN_URL" \
         && unzip /opt/realesrgan/realesrgan.zip -d /opt/realesrgan \
         && rm /opt/realesrgan/realesrgan.zip \
         && BIN_PATH="$(find /opt/realesrgan -type f -name realesrgan-ncnn-vulkan | head -n 1)" \
