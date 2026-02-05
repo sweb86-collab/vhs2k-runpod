@@ -17,8 +17,8 @@ RUN pip3 install --no-cache-dir -r /workspace/requirements.txt
 # Provide a direct download URL at build time via --build-arg
 ARG REALESRGAN_URL=
 RUN mkdir -p /opt/realesrgan \
-    && if [ -n "$REALESGAN_URL" ]; then \
-        wget -O /opt/realesrgan/realesrgan.zip "$REALESGAN_URL" \
+    && if [ -n "$REALESRGAN_URL" ]; then \
+        wget -O /opt/realesrgan/realesrgan.zip "$REALESRGAN_URL" \
         && unzip /opt/realesrgan/realesrgan.zip -d /opt/realesrgan \
         && rm /opt/realesrgan/realesrgan.zip \
         && BIN_PATH="$(find /opt/realesrgan -type f -name realesrgan-ncnn-vulkan | head -n 1)" \
@@ -26,7 +26,7 @@ RUN mkdir -p /opt/realesrgan \
         && chmod +x "$BIN_PATH" \
         && ln -sf "$BIN_PATH" /usr/local/bin/realesrgan-ncnn-vulkan; \
     else \
-        echo "REALESGAN_URL is empty; cannot install realesrgan-ncnn-vulkan" \
+        echo "REALESRGAN_URL is empty; cannot install realesrgan-ncnn-vulkan" \
         && exit 1; \
     fi
 
