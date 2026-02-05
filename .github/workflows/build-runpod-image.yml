@@ -42,6 +42,7 @@ jobs:
           context: ./vhs2k-runpod
           file: ./vhs2k-runpod/Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ inputs.tag }}
+          # For push events, github.event.inputs.tag doesn't exist, so default to "latest"
+          tags: ${{ env.IMAGE_NAME }}:${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || 'latest' }}
           build-args: |
             REALESRGAN_URL=${{ secrets.REALESRGAN_URL }}
